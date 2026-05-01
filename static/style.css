@@ -59,6 +59,15 @@ body {
     gap: 2rem;
 }
 
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--primary);
+    cursor: pointer;
+}
+
 .nav-links a {
     text-decoration: none;
     color: var(--muted);
@@ -233,5 +242,51 @@ select {
 }
 
 @media (max-width: 768px) {
-    .hero h1 { font-size: 2.5rem; }
+    .navbar {
+        padding: 1rem 0;
+        margin-bottom: 2rem;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background: var(--white);
+        flex-direction: column;
+        padding: 2rem;
+        gap: 1.5rem;
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        z-index: 100;
+        text-align: center;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .hero h1 { 
+        font-size: 2.2rem; 
+    }
+
+    .subtitle {
+        font-size: 1.1rem;
+    }
+
+    .grid {
+        gap: 1.5rem;
+    }
+
+    .card {
+        padding: 1.5rem;
+    }
+
+    .form-card {
+        padding: 1.5rem;
+    }
 }

@@ -11,7 +11,8 @@
     <nav class="navbar">
         <div class="container nav-content">
             <a href="{{ url_for('index') }}" class="logo">File<span>Forge</span></a>
-            <ul class="nav-links">
+            <button class="menu-toggle" id="menuToggle">☰</button>
+            <ul class="nav-links" id="navLinks">
                 <li><a href="{{ url_for('index') }}">Home</a></li>
                 <li><a href="{{ url_for('image_compress') }}">Compress</a></li>
                 <li><a href="{{ url_for('pdf_merge') }}">Merge</a></li>
@@ -21,6 +22,15 @@
             </ul>
         </div>
     </nav>
+
+    <script>
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+        
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+    </script>
 
     <div class="container main-content">
         {% with messages = get_flashed_messages(with_categories=true) %}
