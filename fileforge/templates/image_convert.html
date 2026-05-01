@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="tool-header">
+    <h1>Image Converter</h1>
+    <p>Change your image format instantly.</p>
+</div>
+
+<div class="tool-container">
+    <div class="card form-card">
+        {% if success %}
+            <div class="alert alert-success">✅ Format converted successfully!</div>
+            <div class="result-actions">
+                <a href="{{ url_for('download_file', filename=download_url) }}" class="btn btn-accent">Download Converted Image</a>
+                <br>
+                <a href="{{ url_for('image_convert') }}" class="link-back">Convert another image</a>
+            </div>
+        {% else %}
+            <form action="{{ url_for('image_convert') }}" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="file">Select Image</label>
+                    <input type="file" id="file" name="file" accept=".jpg,.jpeg,.png,.webp" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="format">Target Format</label>
+                    <select id="format" name="format">
+                        <option value="PNG">PNG</option>
+                        <option value="JPG">JPG</option>
+                        <option value="WEBP">WEBP</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Convert Image</button>
+            </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

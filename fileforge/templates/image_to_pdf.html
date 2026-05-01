@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="tool-header">
+    <h1>Image to PDF Converter</h1>
+    <p>Convert multiple images into a single PDF document.</p>
+</div>
+
+<div class="tool-container">
+    <div class="card form-card">
+        {% if success %}
+            <div class="alert alert-success">✅ Images converted to PDF!</div>
+            <div class="result-actions">
+                <a href="{{ url_for('download_file', filename=download_url) }}" class="btn btn-accent">Download PDF</a>
+                <br>
+                <a href="{{ url_for('image_to_pdf') }}" class="link-back">Convert more images</a>
+            </div>
+        {% else %}
+            <form action="{{ url_for('image_to_pdf') }}" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="files">Select Images (PNG, JPG, WEBP)</label>
+                    <input type="file" id="files" name="files" accept=".png,.jpg,.jpeg,.webp" multiple required>
+                    <small>Select multiple images to combine into one PDF.</small>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Convert to PDF</button>
+            </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

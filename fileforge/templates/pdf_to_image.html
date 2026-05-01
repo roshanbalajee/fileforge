@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="tool-header">
+    <h1>PDF to Image Converter</h1>
+    <p>Extract each page of your PDF as a high-quality image.</p>
+</div>
+
+<div class="tool-container">
+    <div class="card form-card">
+        {% if success %}
+            <div class="alert alert-success">✅ PDF converted to image(s)!</div>
+            <div class="result-actions">
+                <a href="{{ url_for('download_file', filename=download_url) }}" class="btn btn-accent">Download Results</a>
+                <br>
+                <a href="{{ url_for('pdf_to_image') }}" class="link-back">Convert another PDF</a>
+            </div>
+        {% else %}
+            <form action="{{ url_for('pdf_to_image') }}" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="file">Select PDF File</label>
+                    <input type="file" id="file" name="file" accept=".pdf" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Convert to Images</button>
+            </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

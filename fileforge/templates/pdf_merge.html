@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="tool-header">
+    <h1>PDF Merger</h1>
+    <p>Upload multiple PDF files to combine them.</p>
+</div>
+
+<div class="tool-container">
+    <div class="card form-card">
+        {% if success %}
+            <div class="alert alert-success">✅ PDFs merged successfully!</div>
+            <div class="result-actions">
+                <a href="{{ url_for('download_file', filename=download_url) }}" class="btn btn-accent">Download Merged PDF</a>
+                <br>
+                <a href="{{ url_for('pdf_merge') }}" class="link-back">Merge more files</a>
+            </div>
+        {% else %}
+            <form action="{{ url_for('pdf_merge') }}" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="files">Select PDF Files</label>
+                    <input type="file" id="files" name="files" accept=".pdf" multiple required>
+                    <small>Hold Ctrl to select multiple files.</small>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Merge PDFs</button>
+            </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="tool-header">
+    <h1>Image Compressor</h1>
+    <p>Upload an image to reduce its file size.</p>
+</div>
+
+<div class="tool-container">
+    <div class="card form-card">
+        {% if success %}
+            <div class="alert alert-success">✅ File processed! Ready for download.</div>
+            <div class="result-actions">
+                <a href="{{ url_for('download_file', filename=download_url) }}" class="btn btn-accent">Download Compressed Image</a>
+                <br>
+                <a href="{{ url_for('image_compress') }}" class="link-back">Compress another image</a>
+            </div>
+        {% else %}
+            <form action="{{ url_for('image_compress') }}" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="file">Select Image (JPG, PNG, WEBP)</label>
+                    <input type="file" id="file" name="file" accept=".jpg,.jpeg,.png,.webp" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="quality">Compression Strength</label>
+                    <select id="quality" name="quality">
+                        <option value="low">Low (High Quality)</option>
+                        <option value="medium" selected>Medium (Balanced)</option>
+                        <option value="high">High (Smallest Size)</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Compress Image</button>
+            </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

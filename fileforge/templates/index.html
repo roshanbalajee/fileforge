@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero">
+    <h1>FileForge</h1>
+    <p class="subtitle">Fast & Simple File Tools</p>
+</div>
+
+<div class="grid">
+    <a href="{{ url_for('image_compress') }}" class="card">
+        <div class="icon">🖼️</div>
+        <h3>Image Compressor</h3>
+        <p>Reduce file size while keeping quality.</p>
+        <span class="btn-text">Open Tool →</span>
+    </a>
+
+    <a href="{{ url_for('pdf_merge') }}" class="card">
+        <div class="icon">📄</div>
+        <h3>PDF Merger</h3>
+        <p>Combine multiple PDFs into one document.</p>
+        <span class="btn-text">Open Tool →</span>
+    </a>
+
+    <a href="{{ url_for('image_convert') }}" class="card">
+        <div class="icon">🔄</div>
+        <h3>Image Converter</h3>
+        <p>Switch between JPG, PNG, and WebP.</p>
+        <span class="btn-text">Open Tool →</span>
+    </a>
+
+    <a href="{{ url_for('image_to_pdf') }}" class="card">
+        <div class="icon">🖼️📄</div>
+        <h3>Image to PDF</h3>
+        <p>Combine images into a single PDF.</p>
+        <span class="btn-text">Open Tool →</span>
+    </a>
+
+    <a href="{{ url_for('pdf_to_image') }}" class="card">
+        <div class="icon">📄🖼️</div>
+        <h3>PDF to Image</h3>
+        <p>Convert PDF pages to PNG images.</p>
+        <span class="btn-text">Open Tool →</span>
+    </a>
+</div>
+{% endblock %}
