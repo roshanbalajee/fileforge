@@ -1,51 +1,251 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FileForge</title>
+    <title>{% block title %}FileForge{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    {% if adsense_client_id %}
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ adsense_client_id }}" crossorigin="anonymous"></script>
+    {% endif %}
 </head>
+
 <body>
     <nav class="navbar">
-        <div class="container nav-content">
-            <a href="{{ url_for('index') }}" class="logo">File<span>Forge</span></a>
-            <button class="menu-toggle" id="menuToggle">☰</button>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="{{ url_for('index') }}">Home</a></li>
-                <li><a href="{{ url_for('image_compress') }}">Compress</a></li>
-                <li><a href="{{ url_for('pdf_merge') }}">Merge</a></li>
-                <li><a href="{{ url_for('image_convert') }}">Convert</a></li>
-                <li><a href="{{ url_for('image_to_pdf') }}">Img to PDF</a></li>
-                <li><a href="{{ url_for('pdf_to_image') }}">PDF to Img</a></li>
-            </ul>
+        <div class="nav-shell">
+            <a href="{{ url_for('index') }}" class="logo" aria-label="FileForge home">
+                <span class="logo-mark">F</span>
+                <span>File<span>Forge</span></span>
+            </a>
+
+            <button class="menu-toggle" id="menuToggle" aria-label="Open navigation">Menu</button>
+
+            <div class="nav-links" id="navLinks">
+                <a href="{{ url_for('pdf_merge') }}">Merge PDF</a>
+                <a href="{{ url_for('tool_placeholder', slug='split-pdf') }}">Split PDF</a>
+                <a href="{{ url_for('tool_placeholder', slug='compress-pdf') }}">Compress PDF</a>
+
+                <div class="nav-item has-menu">
+                    <button class="nav-menu-button" type="button">Convert PDF <span>v</span></button>
+                    <div class="mega-menu compact-menu">
+                        <div>
+                            <h3>Convert to PDF</h3>
+                            {% for tool in tool_categories[2].tools %}
+                            <a class="mega-link" href="{{ tool.url }}">
+                                <span class="tool-icon {{ tool.tone }}">{{ tool.icon }}</span>
+                                <span>{{ tool.name }}</span>
+                            </a>
+                            {% endfor %}
+                        </div>
+                        <div>
+                            <h3>Convert from PDF</h3>
+                            {% for tool in tool_categories[3].tools %}
+                            <a class="mega-link" href="{{ tool.url }}">
+                                <span class="tool-icon {{ tool.tone }}">{{ tool.icon }}</span>
+                                <span>{{ tool.name }}</span>
+                            </a>
+                            {% endfor %}
+                        </div>
+                        <div>
+                            <h3>Image Tools</h3>
+                            <a class="mega-link" href="{{ url_for('image_compress') }}">
+                                <span class="tool-icon green">IC</span>
+                                <span>Compress Image</span>
+                            </a>
+                            <a class="mega-link" href="{{ url_for('image_convert') }}">
+                                <span class="tool-icon blue">CV</span>
+                                <span>Convert Image</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nav-item has-menu">
+                    <button class="nav-menu-button highlight" type="button">All PDF Tools <span>v</span></button>
+                    <div class="mega-menu tools-menu">
+                        {% for category in tool_categories %}
+                        <section>
+                            <h3>{{ category.title }}</h3>
+                            {% for tool in category.tools %}
+                            <a class="mega-link" href="{{ tool.url }}">
+                                <span class="tool-icon {{ tool.tone }}">{{ tool.icon }}</span>
+                                <span>{{ tool.name }}</span>
+                            </a>
+                            {% endfor %}
+                        </section>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-actions">
+                {% if current_user %}
+                <div class="user-chip">
+                    {% if current_user.picture %}
+                    <img src="{{ current_user.picture }}" alt="">
+                    {% endif %}
+                    <span>{{ current_user.name or current_user.email }}</span>
+                </div>
+                <a href="{{ url_for('logout') }}" class="plain-link">Logout</a>
+                {% else %}
+                <a href="{{ url_for('login') }}" class="plain-link">Login</a>
+                <a href="{{ url_for('signup') }}" class="signup-button">Sign up</a>
+                {% endif %}
+                <button class="apps-button" id="appsButton" type="button" aria-label="Open products menu">
+                    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                </button>
+                <div class="product-menu" id="productMenu">
+                    <div>
+                        <h3>Other Products</h3>
+                        <a href="{{ url_for('tool_placeholder', slug='edit-pdf') }}" class="product-row">
+                            <span class="product-icon blue">IM</span>
+                            <span><strong>FileForgeIMG</strong><small>Effortless image editing</small></span>
+                        </a>
+                        <a href="{{ url_for('tool_placeholder', slug='sign-pdf') }}" class="product-row">
+                            <span class="product-icon steel">SG</span>
+                            <span><strong>FileForgeSign</strong><small>e-Signing made simple</small></span>
+                        </a>
+                        <a href="{{ url_for('tool_placeholder', slug='html-to-pdf') }}" class="product-row">
+                            <span class="product-icon green">AP</span>
+                            <span><strong>FileForgeAPI</strong><small>Document automation for developers</small></span>
+                        </a>
+                        <a class="integration-box" href="{{ url_for('tool_placeholder', slug='html-to-pdf') }}">Integrations <small>Zapier, Make, Wordpress...</small></a>
+                    </div>
+                    <div>
+                        <h3>Solutions</h3>
+                        <a class="solution-card" href="{{ url_for('tool_placeholder', slug='organize-pdf') }}">
+                            <span class="bars"><i></i><i></i><i></i></span>
+                            <span><strong>Business</strong><small>Streamlined PDF editing and workflows for teams</small></span>
+                        </a>
+                        <h3>Applications</h3>
+                        <a class="product-row" href="{{ url_for('tool_placeholder', slug='edit-pdf') }}"><span class="product-icon coral">DT</span><span><strong>Desktop App</strong><small>Available for Mac and Windows</small></span></a>
+                        <a class="product-row" href="{{ url_for('tool_placeholder', slug='edit-pdf') }}"><span class="product-icon coral">MB</span><span><strong>Mobile App</strong><small>Available for iOS and Android</small></span></a>
+                    </div>
+                    <div class="product-links">
+                        <a href="{{ url_for('pricing') }}">Pricing</a>
+                        <a href="{{ url_for('tool_placeholder', slug='protect-pdf') }}">Security</a>
+                        <a href="{{ url_for('index') }}">Features</a>
+                        <a href="{{ url_for('index') }}">About us</a>
+                        <hr>
+                        <a href="{{ url_for('index') }}">Help</a>
+                        <a href="{{ url_for('index') }}">Language</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </nav>
+
+    <main class="page-shell">
+        {% if adsense_client_id and adsense_top_slot %}
+        <div class="ad-row">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="{{ adsense_client_id }}"
+                 data-ad-slot="{{ adsense_top_slot }}"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+        {% else %}
+        <div class="ad-row ad-placeholder">Advertisement</div>
+        {% endif %}
+
+        <div class="content-layout">
+            <aside class="side-ad">
+                {% if adsense_client_id and adsense_side_slot %}
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="{{ adsense_client_id }}"
+                     data-ad-slot="{{ adsense_side_slot }}"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                {% else %}
+                <span>Ad</span>
+                {% endif %}
+            </aside>
+
+            <div class="container main-content">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+
+                {% block content %}{% endblock %}
+            </div>
+
+            <aside class="side-ad right">
+                {% if adsense_client_id and adsense_side_slot %}
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="{{ adsense_client_id }}"
+                     data-ad-slot="{{ adsense_side_slot }}"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                {% else %}
+                <span>Ad</span>
+                {% endif %}
+            </aside>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 FileForge - Simple and powerful file tools</p>
+    </footer>
 
     <script>
         const menuToggle = document.getElementById('menuToggle');
         const navLinks = document.getElementById('navLinks');
-        
+        const appsButton = document.getElementById('appsButton');
+        const productMenu = document.getElementById('productMenu');
+
         menuToggle.addEventListener('click', () => {
             navLinks.classList.toggle('active');
         });
+
+        appsButton.addEventListener('click', (event) => {
+            event.stopPropagation();
+            document.querySelectorAll('.has-menu.open').forEach((item) => item.classList.remove('open'));
+            productMenu.classList.toggle('active');
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!productMenu.contains(event.target) && !appsButton.contains(event.target)) {
+                productMenu.classList.remove('active');
+            }
+            if (!event.target.closest('.has-menu')) {
+                document.querySelectorAll('.has-menu.open').forEach((item) => item.classList.remove('open'));
+            }
+        });
+
+        document.querySelectorAll('.nav-menu-button').forEach((button) => {
+            button.addEventListener('click', (event) => {
+                event.stopPropagation();
+                productMenu.classList.remove('active');
+                document.querySelectorAll('.has-menu.open').forEach((item) => {
+                    if (item !== button.parentElement) {
+                        item.classList.remove('open');
+                    }
+                });
+                button.parentElement.classList.toggle('open');
+            });
+        });
+
+        document.querySelectorAll('.mega-menu').forEach((menu) => {
+            menu.addEventListener('click', (event) => {
+                event.stopPropagation();
+            });
+        });
+
+        if (window.adsbygoogle) {
+            document.querySelectorAll('.adsbygoogle').forEach(() => {
+                try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (error) {}
+            });
+        }
     </script>
-
-    <div class="container main-content">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-
-        {% block content %}{% endblock %}
-    </div>
-
-    <footer class="footer">
-        <p>&copy; 2024 FileForge - Simple & Powerful File Tools</p>
-    </footer>
 </body>
+
 </html>

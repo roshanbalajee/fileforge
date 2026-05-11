@@ -4,3 +4,7 @@ PyPDF2
 pdf2image
 pymupdf
 gunicorn
+authlib
+python-docx
+openpyxl
+python-pptx

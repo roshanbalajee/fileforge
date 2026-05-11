@@ -8,5 +8,6 @@ outputs/*
 .vscode/
 .idea/
 *.log
+users.json
 venv/
 env/

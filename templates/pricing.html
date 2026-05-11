@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Pricing - FileForge{% endblock %}
+
+{% block content %}
+<section class="pricing-hero">
+    <span class="eyebrow">Plans</span>
+    <h1>Choose the workspace that fits your files</h1>
+    <p>Start free, upgrade for faster processing, team workflows, and an ad-free FileForge experience.</p>
+</section>
+
+<section class="pricing-grid">
+    <article class="price-card">
+        <span class="plan-badge">Basic</span>
+        <h2>Free</h2>
+        <p class="price-note">For quick daily file edits</p>
+        <a href="{{ url_for('login') }}" class="btn btn-soft">Start for free</a>
+        <ul>
+            <li>Core PDF and image tools</li>
+            <li>Limited document processing</li>
+            <li>Ad-supported workspace</li>
+            <li>Local browser downloads</li>
+        </ul>
+    </article>
+
+    <article class="price-card featured">
+        <span class="plan-badge">Premium</span>
+        <h2>₹500 <small>/ month</small></h2>
+        <p class="price-note">₹2,400 yearly with launch discount</p>
+        <a href="{{ url_for('login') }}" class="btn btn-primary">Go Premium</a>
+        <ul>
+            <li>Full access to every FileForge tool</li>
+            <li>Unlimited document processing</li>
+            <li>Ad-free experience</li>
+            <li>Priority support</li>
+            <li>2,000 AI credits</li>
+        </ul>
+    </article>
+
+    <article class="price-card">
+        <span class="plan-badge">Business</span>
+        <h2>Let's talk</h2>
+        <p class="price-note">For teams with custom workflows</p>
+        <a href="{{ url_for('login') }}" class="btn btn-soft">Contact sales</a>
+        <ul>
+            <li>All Premium features</li>
+            <li>Custom contracts</li>
+            <li>Dedicated account manager</li>
+            <li>Single Sign-On planning</li>
+        </ul>
+    </article>
+</section>
+{% endblock %}

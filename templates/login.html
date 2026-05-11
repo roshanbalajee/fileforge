@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}{% if mode == 'signup' %}Sign up{% else %}Login{% endif %} - FileForge{% endblock %}
+
+{% block content %}
+<div class="auth-wrap">
+    <div class="auth-panel">
+        <span class="tool-icon steel large">FF</span>
+        <h1>{% if mode == 'signup' %}Create your FileForge account{% else %}Welcome back{% endif %}</h1>
+        <p>{% if mode == 'signup' %}Create an account to access your workspace and premium-ready flows.{% else %}Login with your FileForge account or continue with Google when configured.{% endif %}</p>
+
+        <form class="auth-form" action="{{ url_for('signup_post' if mode == 'signup' else 'login_post') }}" method="post">
+            {% if mode == 'signup' %}
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required autocomplete="name">
+            </div>
+            {% endif %}
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required autocomplete="email">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required minlength="6" autocomplete="{% if mode == 'signup' %}new-password{% else %}current-password{% endif %}">
+            </div>
+            <button type="submit" class="btn btn-primary">{% if mode == 'signup' %}Create account{% else %}Login{% endif %}</button>
+        </form>
+
+        <div class="auth-switch">
+            {% if mode == 'signup' %}
+            Already have an account? <a href="{{ url_for('login') }}">Login</a>
+            {% else %}
+            New to FileForge? <a href="{{ url_for('signup') }}">Create an account</a>
+            {% endif %}
+        </div>
+
+        <a href="{{ url_for('google_login') }}" class="google-button">
+            <span>G</span>
+            Continue with Google
+        </a>
+
+        {% if not google_ready %}
+        <div class="setup-note">
+            Google sign-in is optional. Add <code>GOOGLE_CLIENT_ID</code> and <code>GOOGLE_CLIENT_SECRET</code> in Render or your local environment to enable it.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
