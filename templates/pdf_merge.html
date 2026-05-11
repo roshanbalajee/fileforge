@@ -9,20 +9,33 @@
 <div class="tool-container">
     <div class="card form-card">
         {% if success %}
-            <div class="alert alert-success">✅ PDFs merged successfully!</div>
-            <div class="result-actions">
-                <a href="{{ url_for('download_file', filename=download_url) }}" class="btn btn-accent">Download Merged PDF</a>
-                <br>
-                <a href="{{ url_for('pdf_merge') }}" class="link-back">Merge more files</a>
-            </div>
+            <div class="alert alert-success">PDFs merged successfully. Preview the result before downloading.</div>
+            {% set reset_url = url_for('pdf_merge') %}
+            {% set ai_result = false %}
+            {% include "_result_panel.html" %}
         {% else %}
-            <form action="{{ url_for('pdf_merge') }}" method="post" enctype="multipart/form-data">
+            <form class="preview-form" action="{{ url_for('pdf_merge') }}" method="post" enctype="multipart/form-data">
+                <div class="filedeck">
+                    <div class="filedeck-preview" data-file-preview>
+                        <div class="filedeck-empty">
+                            <span>MG</span>
+                            <strong>Merge preview</strong>
+                            <small>Select PDFs to review the first file before merging.</small>
+                        </div>
+                    </div>
+                    <div class="filedeck-meta">
+                        <span class="eyebrow">Workspace</span>
+                        <h2>PDF Merger</h2>
+                        <p data-file-name>No file selected</p>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label for="files">Select PDF Files</label>
-                    <input type="file" id="files" name="files" accept=".pdf" multiple required>
+                    <input data-preview-input type="file" id="files" name="files" accept=".pdf" multiple required>
                     <small>Hold Ctrl to select multiple files.</small>
                 </div>
-                
+
                 <button type="submit" class="btn btn-primary">Merge PDFs</button>
             </form>
         {% endif %}

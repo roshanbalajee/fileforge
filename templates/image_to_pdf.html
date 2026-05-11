@@ -9,20 +9,23 @@
 <div class="tool-container">
     <div class="card form-card">
         {% if success %}
-            <div class="alert alert-success">✅ Images converted to PDF!</div>
-            <div class="result-actions">
-                <a href="{{ url_for('download_file', filename=download_url) }}" class="btn btn-accent">Download PDF</a>
-                <br>
-                <a href="{{ url_for('image_to_pdf') }}" class="link-back">Convert more images</a>
-            </div>
+            <div class="alert alert-success">Images converted to PDF. Preview it before downloading.</div>
+            {% set reset_url = url_for('image_to_pdf') %}
+            {% set ai_result = false %}
+            {% include "_result_panel.html" %}
         {% else %}
-            <form action="{{ url_for('image_to_pdf') }}" method="post" enctype="multipart/form-data">
+            <form class="preview-form" action="{{ url_for('image_to_pdf') }}" method="post" enctype="multipart/form-data">
+                <div class="filedeck">
+                    <div class="filedeck-preview" data-file-preview>
+                        <div class="filedeck-empty"><span>JP</span><strong>Image preview</strong><small>Select images to preview the first one.</small></div>
+                    </div>
+                    <div class="filedeck-meta"><span class="eyebrow">Workspace</span><h2>JPG to PDF</h2><p data-file-name>No file selected</p></div>
+                </div>
                 <div class="form-group">
                     <label for="files">Select Images (PNG, JPG, WEBP)</label>
-                    <input type="file" id="files" name="files" accept=".png,.jpg,.jpeg,.webp" multiple required>
+                    <input data-preview-input type="file" id="files" name="files" accept=".png,.jpg,.jpeg,.webp" multiple required>
                     <small>Select multiple images to combine into one PDF.</small>
                 </div>
-                
                 <button type="submit" class="btn btn-primary">Convert to PDF</button>
             </form>
         {% endif %}

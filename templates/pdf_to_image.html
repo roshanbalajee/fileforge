@@ -9,19 +9,22 @@
 <div class="tool-container">
     <div class="card form-card">
         {% if success %}
-            <div class="alert alert-success">✅ PDF converted to image(s)!</div>
-            <div class="result-actions">
-                <a href="{{ url_for('download_file', filename=download_url) }}" class="btn btn-accent">Download Results</a>
-                <br>
-                <a href="{{ url_for('pdf_to_image') }}" class="link-back">Convert another PDF</a>
-            </div>
+            <div class="alert alert-success">PDF converted. Preview the result before downloading.</div>
+            {% set reset_url = url_for('pdf_to_image') %}
+            {% set ai_result = false %}
+            {% include "_result_panel.html" %}
         {% else %}
-            <form action="{{ url_for('pdf_to_image') }}" method="post" enctype="multipart/form-data">
+            <form class="preview-form" action="{{ url_for('pdf_to_image') }}" method="post" enctype="multipart/form-data">
+                <div class="filedeck">
+                    <div class="filedeck-preview" data-file-preview>
+                        <div class="filedeck-empty"><span>PJ</span><strong>PDF preview</strong><small>Select a PDF to preview.</small></div>
+                    </div>
+                    <div class="filedeck-meta"><span class="eyebrow">Workspace</span><h2>PDF to Image</h2><p data-file-name>No file selected</p></div>
+                </div>
                 <div class="form-group">
                     <label for="file">Select PDF File</label>
-                    <input type="file" id="file" name="file" accept=".pdf" required>
+                    <input data-preview-input type="file" id="file" name="file" accept=".pdf" required>
                 </div>
-                
                 <button type="submit" class="btn btn-primary">Convert to Images</button>
             </form>
         {% endif %}

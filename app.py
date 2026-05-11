@@ -444,13 +444,56 @@ def sign_in_user(name, email):
 
 @app.context_processor
 def inject_site_data():
+    def preview_info(filename):
+        if not filename:
+            return None
+        ext = filename.rsplit('.', 1)[-1].lower() if '.' in filename else ''
+        path = os.path.join(app.config['OUTPUT_FOLDER'], filename)
+        size = os.path.getsize(path) if os.path.exists(path) else 0
+        kind = 'document'
+        if ext == 'pdf':
+            kind = 'pdf'
+        elif ext in {'png', 'jpg', 'jpeg', 'webp'}:
+            kind = 'image'
+        elif ext == 'txt':
+            kind = 'text'
+        elif ext == 'zip':
+            kind = 'archive'
+        return {
+            'filename': filename,
+            'extension': ext.upper() or 'FILE',
+            'kind': kind,
+            'size': format_file_size(size),
+            'preview_url': url_for('preview_file', filename=filename),
+            'download_url': url_for('download_file', filename=filename),
+        }
+
+    def preview_text(filename):
+        if not filename or not filename.lower().endswith('.txt'):
+            return ''
+        path = os.path.join(app.config['OUTPUT_FOLDER'], filename)
+        if not os.path.exists(path):
+            return ''
+        with open(path, 'r', encoding='utf-8', errors='ignore') as handle:
+            return handle.read(5000)
+
     return {
         "tool_categories": TOOL_CATEGORIES,
         "current_user": session.get("user"),
         "adsense_client_id": app.config['ADSENSE_CLIENT_ID'],
         "adsense_top_slot": app.config['ADSENSE_TOP_SLOT'],
         "adsense_side_slot": app.config['ADSENSE_SIDE_SLOT'],
+        "preview_info": preview_info,
+        "preview_text": preview_text,
     }
+
+def format_file_size(size):
+    units = ['B', 'KB', 'MB', 'GB']
+    value = float(size)
+    for unit in units:
+        if value < 1024 or unit == units[-1]:
+            return f"{value:.1f} {unit}" if unit != 'B' else f"{int(value)} {unit}"
+        value /= 1024
 
 @app.route('/')
 def index():
@@ -1083,6 +1126,25 @@ def download_file(filename):
         as_attachment=True,
         download_name=filename,
         mimetype=mimetype
+    )
+
+@app.route('/preview/<filename>')
+def preview_file(filename):
+    file_path = os.path.join(app.config['OUTPUT_FOLDER'], filename)
+    ext = filename.rsplit('.', 1)[-1].lower()
+    mimetypes = {
+        'pdf': 'application/pdf',
+        'png': 'image/png',
+        'jpg': 'image/jpeg',
+        'jpeg': 'image/jpeg',
+        'webp': 'image/webp',
+        'txt': 'text/plain',
+    }
+    return send_file(
+        file_path,
+        as_attachment=False,
+        download_name=filename,
+        mimetype=mimetypes.get(ext, 'application/octet-stream')
     )
 
 if __name__ == '__main__':

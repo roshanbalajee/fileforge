@@ -1,0 +1,54 @@
+{% set result = preview_info(download_url) %}
+<section class="result-workspace">
+    <div class="result-stage">
+        <div class="result-stage-header">
+            <span class="status-dot"></span>
+            <span>Preview ready</span>
+        </div>
+
+        {% if result.kind == 'pdf' %}
+        <iframe class="result-preview-frame" src="{{ result.preview_url }}" title="PDF preview"></iframe>
+        {% elif result.kind == 'image' %}
+        <div class="image-preview-wrap">
+            <img src="{{ result.preview_url }}" alt="Processed file preview">
+        </div>
+        {% elif result.kind == 'text' %}
+        <pre class="text-preview">{{ preview_text(download_url) }}</pre>
+        {% else %}
+        <div class="file-orbit-preview">
+            <span>{{ result.extension }}</span>
+            <strong>{{ result.filename }}</strong>
+            <small>Preview is limited for this file type, but the processed file is ready.</small>
+        </div>
+        {% endif %}
+    </div>
+
+    <aside class="result-side-panel">
+        <span class="eyebrow">Processed Output</span>
+        <h2>{{ result.filename }}</h2>
+        <dl class="file-stats">
+            <div>
+                <dt>Type</dt>
+                <dd>{{ result.extension }}</dd>
+            </div>
+            <div>
+                <dt>Size</dt>
+                <dd>{{ result.size }}</dd>
+            </div>
+            <div>
+                <dt>Status</dt>
+                <dd>Ready</dd>
+            </div>
+        </dl>
+
+        {% if ai_result %}
+        <div class="ai-result-note">
+            <strong>AI result</strong>
+            <span>Review the generated output before downloading.</span>
+        </div>
+        {% endif %}
+
+        <a href="{{ result.download_url }}" class="btn btn-accent">Download Result</a>
+        <a href="{{ reset_url }}" class="btn btn-soft">Process another file</a>
+    </aside>
+</section>
